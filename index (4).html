@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineStream Pro | Movies & TV Shows</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <!-- Adstera Script -->
+  <script type="text/javascript" src="https://ads.adstera.com/your-publisher-code.js"></script>
+  <style>
+    :root {
+      --primary: #0d253f;
+      --secondary: #01b4e4;
+      --accent: #90cea1;
+      --dark: #0c1e35;
+      --light: #f8f9fa;
+      --tv-accent: #e91e63;
+      --bg-color: #f0f2f5;
+      --text-color: #333;
+      --card-bg: white;
+    }
+    
+    .dark-mode {
+      --primary: #01b4e4;
+      --secondary: #90cea1;
+      --dark: #121212;
+      --bg-color: #1a1a1a;
+      --text-color: #f0f0f0;
+      --card-bg: #2d2d2d;
+      --light: #2d2d2d;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding-top: 70px;
+      transition: all 0.3s ease;
+    }
+    
+    .navbar {
+      background: linear-gradient(135deg, var(--primary), var(--dark));
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Dark mode toggle */
+    .dark-mode-toggle {
+      position: relative;
+      width: 50px;
+      height: 24px;
+      margin-left: 15px;
+    }
+    
+    .dark-mode-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .dark-mode-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .dark-mode-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .dark-mode-slider {
+      background-color: var(--secondary);
+    }
+    
+    input:checked + .dark-mode-slider:before {
+      transform: translateX(26px);
+    }
+    
+    /* Enhanced hero section */
+    .hero-section {
+      position: relative;
+      height: 70vh;
+      min-height: 500px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    
+    .hero-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+    }
+    
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(13, 37, 63, 0.9), rgba(13, 37, 63, 0.7));
+      z-index: 1;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+    
+    /* Enhanced cards */
+    .movie-card, .tv-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      border: none;
+    }
+    
+    .movie-card:hover, .tv-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .card-img-top {
+      height: 300px;
+      object-fit: cover;
+      width: 100%;
+      transition: transform 0.3s ease;
+    }
+    
+    .movie-card:hover .card-img-top,
+    .tv-card:hover .card-img-top {
+      transform: scale(1.05);
+    }
+    
+    /* Loading spinner */
+    .loading-spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: var(--secondary);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Login modal */
+    .auth-modal .modal-content {
+      background: var(--card-bg);
+      color: var(--text-color);
+    }
+    
+    .auth-tabs .nav-link {
+      color: var(--text-color);
+      border: none;
+    }
+    
+    .auth-tabs .nav-link.active {
+      background: linear-gradient(135deg, var(--primary), var(--dark));
+      color: white;
+    }
+    
+    /* Continue watching section */
+    .continue-watching-card {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 200px;
+    }
+    
+    .continue-watching-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .progress-bar {
+      height: 5px;
+      background: rgba(255,255,255,0.3);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    
+    .progress {
+      height: 100%;
+      background: var(--secondary);
+    }
+    
+    /* Ad Modal Styles */
+    #adModal .modal-content {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+    }
+    
+    #adModal .modal-header {
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    #adContainer {
+      min-height: 250px;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .dark-mode #adContainer {
+      background-color: #333;
+    }
+    
+    .ad-countdown {
+      padding: 0 20px;
+    }
+    
+    #adProgressBar {
+      transition: width 1s linear;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .hero-section {
+        height: 60vh;
+        min-height: 400px;
+      }
+      
+      .card-img-top {
+        height: 200px;
+      }
+      
+      #adContainer {
+        min-height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Spinner -->
+  <div class="loading-spinner">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Ad Modal -->
+  <div class="modal fade" id="adModal" tabindex="-1" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Advertisement</h5>
+        </div>
+        <div class="modal-body text-center">
+          <div id="adContainer">
+            <p>Loading advertisement...</p>
+          </div>
+          <div class="ad-countdown mt-3">
+            <p>Please watch this short ad to continue</p>
+            <div class="progress">
+              <div class="progress-bar" id="adProgressBar" role="progressbar" style="width: 0%"></div>
+            </div>
+            <p class="mt-2">Time remaining: <span id="adCountdown">30</span> seconds</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#home"><i class="fas fa-film"></i>CineStream Pro</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="#home" data-section="home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#movies" data-section="movies">Movies</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#tvshows" data-section="tvshows">TV Shows</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#mylist" data-section="mylist">My List</a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center ml-3">
+            <label class="dark-mode-toggle mb-0">
+              <input type="checkbox" id="darkModeToggle">
+              <span class="dark-mode-slider"></span>
+            </label>
+            <button class="btn btn-outline-light ml-3" data-toggle="modal" data-target="#authModal">
+              <i class="fas fa-user"></i> Sign In
+            </button>
+            <form class="form-inline ml-3 d-none d-md-flex">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search...">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Home Section -->
+    <section id="home-section" class="content-section active">
+      <section class="hero-section">
+        <video autoplay muted loop class="hero-video">
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-going-down-a-curved-highway-through-a-mountain-range-41537-large.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="container">
+            <h1 class="hero-title">Unlimited Movies & TV Shows</h1>
+            <p class="hero-subtitle">Stream the latest blockbusters and binge-worthy series</p>
+            <div class="search-box">
+              <div class="input-group">
+                <input type="text" class="form-control form-control-lg" placeholder="What do you want to watch?">
+                <div class="input-group-append">
+                  <button class="btn btn-primary btn-lg" type="button">Search</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="container">
+        <!-- Continue Watching -->
+        <h4 class="mb-4">Continue Watching</h4>
+        <div class="row mb-5" id="continueWatchingGrid">
+          <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+            <div class="continue-watching-card">
+              <img src="https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_.jpg" alt="Avengers">
+              <div class="progress-bar">
+                <div class="progress" style="width: 65%"></div>
+              </div>
+            </div>
+            <p class="mt-2 mb-0 text-center">Avengers</p>
+          </div>
+          <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+            <div class="continue-watching-card">
+              <img src="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg" alt="Inception">
+              <div class="progress-bar">
+                <div class="progress" style="width: 30%"></div>
+              </div>
+            </div>
+            <p class="mt-2 mb-0 text-center">Inception</p>
+          </div>
+        </div>
+
+        <!-- Trending Now -->
+        <h4 class="mb-4">Trending Now</h4>
+        <div class="row" id="trendingGrid"></div>
+
+        <!-- Featured Movies -->
+        <h4 class="mb-4 mt-5">Featured Movies</h4>
+        <div class="row" id="featuredGrid"></div>
+
+        <!-- Popular TV Shows -->
+        <h4 class="mb-4 mt-5">Popular TV Shows</h4>
+        <div class="row" id="popularTvGrid"></div>
+      </div>
+    </section>
+
+    <!-- Movies Section -->
+    <section id="movies-section" class="content-section">
+      <div class="container pt-5">
+        <div class="filter-container">
+          <h5 class="mb-3">Filter Movies</h5>
+          <div class="d-flex flex-wrap">
+            <button class="btn btn-outline-primary filter-btn active">All</button>
+            <button class="btn btn-outline-primary filter-btn">Action</button>
+            <button class="btn btn-outline-primary filter-btn">Comedy</button>
+            <button class="btn btn-outline-primary filter-btn">Drama</button>
+            <button class="btn btn-outline-primary filter-btn">Sci-Fi</button>
+            <button class="btn btn-outline-primary filter-btn">Horror</button>
+            <button class="btn btn-outline-primary filter-btn">Romance</button>
+            <button class="btn btn-outline-primary filter-btn">Thriller</button>
+            <button class="btn btn-outline-primary filter-btn">Fantasy</button>
+          </div>
+        </div>
+
+        <h4 class="mb-4">All Movies</h4>
+        <div class="row" id="movieGrid"></div>
+      </div>
+    </section>
+
+    <!-- TV Shows Section -->
+    <section id="tvshows-section" class="content-section">
+      <div class="container pt-5">
+        <div class="filter-container">
+          <h5 class="mb-3">Filter TV Shows</h5>
+          <div class="d-flex flex-wrap">
+            <button class="btn btn-outline-primary tv-filter-btn active">All</button>
+            <button class="btn btn-outline-primary tv-filter-btn">Drama</button>
+            <button class="btn btn-outline-primary tv-filter-btn">Comedy</button>
+            <button class="btn btn-outline-primary tv-filter-btn">Sci-Fi</button>
+            <button class="btn btn-outline-primary tv-filter-btn">Crime</button>
+            <button class="btn btn-outline-primary tv-filter-btn">Animation</button>
+            <button class="btn btn-outline-primary tv-filter-btn">Documentary</button>
+          </div>
+        </div>
+
+        <h4 class="mb-4">TV Shows</h4>
+        <div class="row" id="tvGrid"></div>
+      </div>
+    </section>
+
+    <!-- My List Section -->
+    <section id="mylist-section" class="content-section">
+      <div class="container pt-5">
+        <h4 class="mb-4">My Watchlist</h4>
+        <div class="row" id="watchlistGrid">
+          <div class="col-12 text-center py-5">
+            <i class="fas fa-bookmark fa-3x mb-3" style="color: #ccc;"></i>
+            <h4>Your watchlist is empty</h4>
+            <p>Add movies and TV shows to your list to watch later</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Auth Modal -->
+  <div class="modal fade auth-modal" id="authModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <ul class="nav nav-tabs auth-tabs w-100" id="authTabs">
+            <li class="nav-item w-50 text-center">
+              <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login">Sign In</a>
+            </li>
+            <li class="nav-item w-50 text-center">
+              <a class="nav-link" id="register-tab" data-toggle="tab" href="#register">Register</a>
+            </li>
+          </ul>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="tab-content" id="authTabContent">
+            <div class="tab-pane fade show active" id="login">
+              <form id="loginForm">
+                <div class="form-group">
+                  <label for="loginEmail">Email</label>
+                  <input type="email" class="form-control" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                  <label for="loginPassword">Password</label>
+                  <input type="password" class="form-control" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+              </form>
+              <div class="text-center mt-3">
+                <a href="#" class="text-muted">Forgot password?</a>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="register">
+              <form id="registerForm">
+                <div class="form-group">
+                  <label for="registerName">Full Name</label>
+                  <input type="text" class="form-control" id="registerName" required>
+                </div>
+                <div class="form-group">
+                  <label for="registerEmail">Email</label>
+                  <input type="email" class="form-control" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                  <label for="registerPassword">Password</label>
+                  <input type="password" class="form-control" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                  <label for="registerConfirmPassword">Confirm Password</label>
+                  <input type="password" class="form-control" id="registerConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Modal for Movies -->
+  <div class="modal fade" id="watchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Now Playing: <span id="nowPlayingTitle"></span></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body p-0">
+          <video id="videoPlayer" width="100%" height="500" controls controlsList="nodownload">
+            Your browser does not support HTML5 video.
+          </video>
+          <div class="video-info">
+            <div class="video-meta">
+              <span><i class="fas fa-star mr-1 text-warning"></i> <span id="movieRating"></span></span>
+              <span><i class="fas fa-clock mr-1"></i> <span id="movieDuration"></span></span>
+              <span><i class="fas fa-film mr-1"></i> <span id="movieCategory"></span></span>
+            </div>
+            <p id="movieDescription" class="mb-0"></p>
+            <div class="quality-selector">
+              <h6 class="mt-3 mb-2">Select Quality:</h6>
+              <div id="qualityOptions"></div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <button class="btn btn-outline-primary" id="addToWatchlistBtn">
+                <i class="fas fa-bookmark mr-1"></i> Add to Watchlist
+              </button>
+              <div class="rating-widget">
+                <span>Rate this:</span>
+                <div class="stars">
+                  <i class="far fa-star" data-rating="1"></i>
+                  <i class="far fa-star" data-rating="2"></i>
+                  <i class="far fa-star" data-rating="3"></i>
+                  <i class="far fa-star" data-rating="4"></i>
+                  <i class="far fa-star" data-rating="5"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TV Show Details Modal -->
+  <div class="modal fade" id="tvDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header tv-modal-header">
+          <h5 class="modal-title" id="tvShowTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-4">
+              <img id="tvShowPoster" src="" class="img-fluid rounded" alt="">
+            </div>
+            <div class="col-md-8">
+              <div class="d-flex mb-3">
+                <span class="rating-badge tv-rating-badge mr-2"><i class="fas fa-star mr-1"></i><span id="tvShowRating"></span></span>
+                <span class="badge-category"><span id="tvShowGenre"></span></span>
+              </div>
+              <p id="tvShowDescription"></p>
+              <div class="mb-3">
+                <strong>Seasons:</strong> <span id="tvShowSeasons"></span>
+              </div>
+              <div class="mb-3">
+                <strong>Status:</strong> <span id="tvShowStatus"></span>
+              </div>
+              
+              <div class="season-tabs">
+                <ul class="nav nav-tabs tv-tabs" id="seasonTabs"></ul>
+              </div>
+              
+              <div class="episodes-container mt-3">
+                <ul class="episode-list" id="episodeList"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="addTvToWatchlistBtn">Add to Watchlist</button>
+          <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TV Episode Modal -->
+  <div class="modal fade" id="episodeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header tv-modal-header">
+          <h5 class="modal-title" id="episodeTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body p-0">
+          <video id="episodePlayer" width="100%" height="500" controls controlsList="nodownload">
+            Your browser does not support HTML5 video.
+          </video>
+          <div class="video-info">
+            <div class="video-meta">
+              <span><i class="fas fa-star mr-1 text-warning"></i> <span id="episodeRating"></span></span>
+              <span><i class="fas fa-clock mr-1"></i> <span id="episodeDuration"></span></span>
+              <span><i class="fas fa-tv mr-1"></i> <span id="episodeShow"></span></span>
+            </div>
+            <p id="episodeDescription" class="mb-0"></p>
+            <div class="quality-selector">
+              <h6 class="mt-3 mb-2">Select Quality:</h6>
+              <div id="episodeQualityOptions"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-4 mb-md-0">
+          <h5 class="mb-3"><i class="fas fa-film"></i> CineStream Pro</h5>
+          <p>Unlimited streaming of movies and TV shows. Watch anywhere. Cancel anytime.</p>
+        </div>
+        <div class="col-md-2 mb-4 mb-md-0">
+          <h5 class="mb-3">Navigation</h5>
+          <div class="footer-links d-flex flex-column">
+            <a href="#home" data-section="home">Home</a>
+            <a href="#movies" data-section="movies">Movies</a>
+            <a href="#tvshows" data-section="tvshows">TV Shows</a>
+            <a href="#mylist" data-section="mylist">My List</a>
+          </div>
+        </div>
+        <div class="col-md-2 mb-4 mb-md-0">
+          <h5 class="mb-3">Legal</h5>
+          <div class="footer-links d-flex flex-column">
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Cookie Policy</a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h5 class="mb-3">Connect With Us</h5>
+          <div class="social-icons mb-3">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p>© 2023 CineStream Pro. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Enhanced movie data with more entries
+    const movies = [
+      {
+        title: "The Hero",
+        category: "Action",
+        image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1",
+        videoUrl: "http://188.210.209.2/EDI/Movies/John.Wick.Chapter.4.2023.1080p.WEBRip.x264.AAC5.1-%5bYTS.MX%5d.mp4",
+        rating: 7.8,
+        description: "A retired actor must become a real hero when he's unexpectedly drawn into a dangerous conflict that forces him to confront his past and rediscover his courage.",
+        size: "1.2 GB",
+        duration: "2h 15m",
+        featured: true,
+        trending: true,
+        qualityOptions: [
+          { quality: "720p HD", size: "800MB", url: "http://188.210.209.2/EDI/Movies/John.Wick.Chapter.4.2023.720p.WEBRip.x264.AAC5.1-%5bYTS.MX%5d.mp4" },
+          { quality: "1080p Full HD", size: "1.2GB", url: "http://188.210.209.2/EDI/Movies/John.Wick.Chapter.4.2023.1080p.WEBRip.x264.AAC5.1-%5bYTS.MX%5d.mp4" }
+        ]
+      },
+      {
+        title: "Avengers: Infinity War",
+        category: "Action", 
+        image: "https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_.jpg",
+        videoUrl: "http://188.210.209.2/EDI/Movies/Avengers.Infinity.War.2018.1080p.BluRay.x264-[YTS.AM].mp4",
+        rating: 8.5,
+        description: "The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos before his blitz of devastation and ruin puts an end to the universe.",
+        size: "2.5 GB",
+        duration: "2h 29m",
+        featured: true,
+        trending: true,
+        qualityOptions: [
+          { quality: "1080p Full HD", size: "2.5GB", url: "http://188.210.209.2/EDI/Movies/Avengers.Infinity.War.2018.1080p.BluRay.x264-[YTS.AM].mp4" },
+          { quality: "720p HD", size: "1.5GB", url: "http://188.210.209.2/EDI/Movies/Avengers.Infinity.War.2018.720p.BluRay.x264-[YTS.AM].mp4" }
+        ]
+      },
+      {
+        title: "Inception",
+        category: "Sci-Fi",
+        image: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
+        videoUrl: "http://188.210.209.2/EDI/Movies/Inception.2010.1080p.BluRay.x264-[YTS.AM].mp4",
+        rating: 8.8,
+        description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+        size: "2.3 GB",
+        duration: "2h 28m",
+        featured: true,
+        trending: true,
+        qualityOptions: [
+          { quality: "1080p Full HD", size: "2.3GB", url: "http://188.210.209.2/EDI/Movies/Inception.2010.1080p.BluRay.x264-[YTS.AM].mp4" }
+        ]
+      },
+      {
+        title: "The Dark Knight",
+        category: "Action",
+        image: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
+        videoUrl: "http://188.210.209.2/EDI/Movies/The.Dark.Knight.2008.1080p.BluRay.x264-[YTS.AM].mp4",
+        rating: 9.0,
+        description: "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+        size: "2.2 GB",
+        duration: "2h 32m",
+        featured: true,
+        trending: true,
+        qualityOptions: [
+          { quality: "1080p Full HD", size: "2.2GB", url: "http://188.210.209.2/EDI/Movies/The.Dark.Knight.2008.1080p.BluRay.x264-[YTS.AM].mp4" }
+        ]
+      },
+      {
+        title: "Pulp Fiction",
+        category: "Crime",
+        image: "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
+        videoUrl: "http://188.210.209.2/EDI/Movies/Pulp.Fiction.1994.1080p.BluRay.x264-[YTS.AM].mp4",
+        rating: 8.9,
+        description: "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
+        size: "2.1 GB",
+        duration: "2h 34m",
+        featured: true,
+        qualityOptions: [
+          { quality: "1080p Full HD", size: "2.1GB", url: "http://188.210.209.2/EDI/Movies/Pulp.Fiction.1994.1080p.BluRay.x264-[YTS.AM].mp4" }
+        ]
+      },
+      {
+        title: "The Shawshank Redemption",
+        category: "Drama",
+        image: "https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
+        videoUrl: "http://188.210.209.2/EDI/Movies/The.Shawshank.Redemption.1994.1080p.BluRay.x264-[YTS.AM].mp4",
+        rating: 9.3,
+        description: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+        size: "2.4 GB",
+        duration: "2h 22m",
+        featured: true,
+        qualityOptions: [
+          { quality: "1080p Full HD", size: "2.4GB", url: "http://188.210.209.2/EDI/Movies/The.Shawshank.Redemption.1994.1080p.BluRay.x264-[YTS.AM].mp4" }
+        ]
+      }
+    ];
+
+    // Enhanced TV Shows data with more entries
+    const tvShows = [
+      {
+        id: 1,
+        title: "Breaking Bad",
+        genre: "Drama",
+        image: "https://m.media-amazon.com/images/M/MV5BYmQ4YWMxYjUtNjZmYi00MDQ1LWFjMjMtNjA5ZDdiYjdiODU5XkEyXkFqcGdeQXVyMTMzNDExODE5._V1_.jpg",
+        banner: "https://images.unsplash.com/photo-1580137189272-c9379f8864fd",
+        rating: 9.5,
+        description: "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future.",
+        status: "Completed",
+        seasons: 5,
+        featured: true,
+        trending: true,
+        seasonsData: [
+          {
+            seasonNumber: 1,
+            episodes: [
+              { 
+                episodeNumber: 1, 
+                title: "Pilot", 
+                duration: "58m", 
+                description: "Diagnosed with terminal lung cancer, chemistry teacher Walter White teams up with former student Jesse Pinkman to cook and sell crystal meth.",
+                videoUrl: "http://188.210.209.2/EDI/TVShows/Breaking.Bad.S01E01.720p.BluRay.x264.mkv",
+                qualityOptions: [
+                  { quality: "720p HD", size: "850MB", url: "http://188.210.209.2/EDI/TVShows/Breaking.Bad.S01E01.720p.BluRay.x264.mkv" },
+                  { quality: "1080p Full HD", size: "1.5GB", url: "http://188.210.209.2/EDI/TVShows/Breaking.Bad.S01E01.1080p.BluRay.x264.mkv" }
+                ]
+              },
+              { 
+                episodeNumber: 2, 
+                title: "Cat's in the Bag...", 
+                duration: "48m", 
+                description: "After their first drug deal goes terribly wrong, Walt and Jesse are forced to deal with a corpse and a prisoner.",
+                videoUrl: "http://188.210.209.2/EDI/TVShows/Breaking.Bad.S01E02.720p.BluRay.x264.mkv",
+                qualityOptions: [
+                  { quality: "720p HD", size: "800MB", url: "http://188.210.209.2/EDI/TVShows/Breaking.Bad.S01E02.720p.BluRay.x264.mkv" },
+                  { quality: "1080p Full HD", size: "1.4GB", url: "http://188.210.209.2/EDI/TVShows/Breaking.Bad.S01E02.1080p.BluRay.x264.mkv" }
+                ]
+              }
+            ]
+          },
+          {
+            seasonNumber: 2,
+            episodes: [
+              { 
+                episodeNumber: 1, 
+                title: "Seven Thirty-Seven", 
+                duration: "47m", 
+                description: "Walt and Jesse realize how dire their situation is. Meanwhile, Skyler suspects that Walt is hiding something.",
+                videoUrl: "http://188.210.209.2/EDI/TVShows/Breaking.Bad.S02E01.720p.BluRay.x264.mkv",
+                qualityOptions: [
+                  { quality: "720p HD", size: "820MB", url: "http://188.210.209.2/EDI/TVShows/Breaking.Bad.S02E01.720p.BluRay.x264.mkv" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "Stranger Things",
+        genre: "Sci-Fi",
+        image: "https://m.media-amazon.com/images/M/MV5BMDZkYmVhNjMtNWU4MC00MDQxLWE3MjYtZGMzZWI1ZjhlOWJmXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg",
+        banner: "https://images.unsplash.com/photo-1536440136628-849c177e76a1",
+        rating: 8.7,
+        description: "When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces and one strange little girl.",
+        status: "Ongoing",
+        seasons: 4,
+        featured: true,
+        trending: true,
+        seasonsData: [
+          {
+            seasonNumber: 1,
+            episodes: [
+              { 
+                episodeNumber: 1, 
+                title: "Chapter One: The Vanishing of Will Byers", 
+                duration: "48m", 
+                description: "After a boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.",
+                videoUrl: "http://188.210.209.2/EDI/TVShows/Stranger.Things.S01E01.720p.WEBRip.x264.mkv",
+                qualityOptions: [
+                  { quality: "720p HD", size: "780MB", url: "http://188.210.209.2/EDI/TVShows/Stranger.Things.S01E01.720p.WEBRip.x264.mkv" },
+                  { quality: "1080p Full HD", size: "1.3GB", url: "http://188.210.209.2/EDI/TVShows/Stranger.Things.S01E01.1080p.WEBRip.x264.mkv" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "The Mandalorian",
+        genre: "Sci-Fi",
+        image: "https://m.media-amazon.com/images/M/MV5BZDhlMzY0ZGItZTcyNS00ZTAxLWIyMmYtZGQ2ODg5OWZiYmJkXkEyXkFqcGdeQXVyODkzNTgxMDg@._V1_.jpg",
+        banner: "https://images.unsplash.com/photo-1534447677768-be436bb09401",
+        rating: 8.7,
+        description: "The travels of a lone bounty hunter in the outer reaches of the galaxy, far from the authority of the New Republic.",
+        status: "Ongoing",
+        seasons: 3,
+        featured: true,
+        trending: true,
+        seasonsData: [
+          {
+            seasonNumber: 1,
+            episodes: [
+              { 
+                episodeNumber: 1, 
+                title: "Chapter 1: The Mandalorian", 
+                duration: "39m", 
+                description: "A Mandalorian bounty hunter takes a job from a mysterious client.",
+                videoUrl: "http://188.210.209.2/EDI/TVShows/The.Mandalorian.S01E01.720p.WEBRip.x264.mkv",
+                qualityOptions: [
+                  { quality: "720p HD", size: "750MB", url: "http://188.210.209.2/EDI/TVShows/The.Mandalorian.S01E01.720p.WEBRip.x264.mkv" },
+                  { quality: "1080p Full HD", size: "1.2GB", url: "http://188.210.209.2/EDI/TVShows/The.Mandalorian.S01E01.1080p.WEBRip.x264.mkv" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: "Game of Thrones",
+        genre: "Fantasy",
+        image: "https://m.media-amazon.com/images/M/MV5BYTRiNDQwYzAtMzVlZS00NTI5LWJjYjUtMzkwNTUzMWMxZTllXkEyXkFqcGdeQXVyNDIzMzcwNjc@._V1_.jpg",
+        banner: "https://images.unsplash.com/photo-1485846234645-a62644f84728",
+        rating: 9.3,
+        description: "Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.",
+        status: "Completed",
+        seasons: 8,
+        featured: true,
+        seasonsData: [
+          {
+            seasonNumber: 1,
+            episodes: [
+              { 
+                episodeNumber: 1, 
+                title: "Winter Is Coming", 
+                duration: "62m", 
+                description: "Eddard Stark is torn between his family and an old friend when asked to serve at the side of King Robert Baratheon.",
+                videoUrl: "http://188.210.209.2/EDI/TVShows/Game.of.Thrones.S01E01.720p.BluRay.x264.mkv",
+                qualityOptions: [
+                  { quality: "720p HD", size: "1.1GB", url: "http://188.210.209.2/EDI/TVShows/Game.of.Thrones.S01E01.720p.BluRay.x264.mkv" },
+                  { quality: "1080p Full HD", size: "2.1GB", url: "http://188.210.209.2/EDI/TVShows/Game.of.Thrones.S01E01.1080p.BluRay.x264.mkv" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    // Ad variables
+    let adCompleted = false;
+    let adTimer;
+    const adSeconds = 30; // 30-second ad duration
+    let contentCallback; // Stores the callback to execute after ad
+
+    // Initialize the page
+    $(document).ready(function() {
+      // Load home content
+      loadHomeContent();
+      
+      // Setup navigation
+      setupNavigation();
+      
+      // Initialize filter buttons
+      initFilters();
+      
+      // Handle modals
+      initModals();
+      
+      // Initialize dark mode toggle
+      initDarkMode();
+      
+      // Initialize auth forms
+      initAuthForms();
+      
+      // Lazy load images
+      initLazyLoading();
+      
+      // Initialize ad modal
+      $('#adModal').on('hidden.bs.modal', function() {
+        clearInterval(adTimer);
+      });
+    });
+
+    // Show ad before content
+    function showAdBeforeContent(callback) {
+      if (adCompleted) {
+        callback();
+        return;
+      }
+
+      // Store the callback
+      contentCallback = callback;
+      
+      // Reset ad state
+      $('#adCountdown').text(adSeconds);
+      $('#adProgressBar').css('width', '0%');
+      
+      // Show the modal
+      $('#adModal').modal('show');
+      
+      // Load Adstera ad
+      try {
+        // This is where you'd initialize your Adstera ad
+        // The exact code depends on Adstera's implementation
+        // This is a placeholder - replace with actual Adstera code
+        const adScript = document.createElement('script');
+        adScript.innerHTML = `
+          // Adstera ad initialization code would go here
+          console.log('Adstera ad loaded');
+          startAdCountdown();
+        `;
+        document.getElementById('adContainer').innerHTML = '';
+        document.getElementById('adContainer').appendChild(adScript);
+      } catch (e) {
+        console.error('Error loading ad:', e);
+        startAdCountdown();
+      }
+    }
+
+    function startAdCountdown() {
+      let secondsLeft = adSeconds;
+      
+      adTimer = setInterval(() => {
+        secondsLeft--;
+        $('#adCountdown').text(secondsLeft);
+        const progressPercent = 100 - (secondsLeft / adSeconds * 100);
+        $('#adProgressBar').css('width', progressPercent + '%');
+        
+        if (secondsLeft <= 0) {
+          clearInterval(adTimer);
+          adCompleted = true;
+          $('#adModal').modal('hide');
+          
+          // Execute the content callback after ad is completed
+          if (typeof contentCallback === 'function') {
+            contentCallback();
+          }
+        }
+      }, 1000);
+    }
+
+    // Navigation functions
+    function setupNavigation() {
+      $('a[data-section]').click(function(e) {
+        e.preventDefault();
+        const section = $(this).data('section');
+        showSection(section);
+        $('.nav-link').removeClass('active');
+        $(this).addClass('active');
+      });
+      
+      if (window.location.hash) {
+        const section = window.location.hash.substring(1);
+        showSection(section);
+        $(`a[data-section="${section}"]`).addClass('active');
+      }
+    }
+    
+    function showSection(section) {
+      $('.content-section').removeClass('active');
+      $(`#${section}-section`).addClass('active');
+      window.location.hash = section;
+      
+      switch(section) {
+        case 'home': loadHomeContent(); break;
+        case 'movies': renderAllMovies(); break;
+        case 'tvshows': renderAllTvShows(); break;
+        case 'mylist': loadWatchlist(); break;
+      }
+    }
+
+    // Dark mode toggle
+    function initDarkMode() {
+      const darkModeToggle = $('#darkModeToggle');
+      const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+      
+      if (darkModeEnabled) {
+        $('body').addClass('dark-mode');
+        darkModeToggle.prop('checked', true);
+      }
+      
+      darkModeToggle.change(function() {
+        if ($(this).is(':checked')) {
+          $('body').addClass('dark-mode');
+          localStorage.setItem('darkMode', 'enabled');
+        } else {
+          $('body').removeClass('dark-mode');
+          localStorage.setItem('darkMode', 'disabled');
+        }
+      });
+    }
+
+    // Auth forms
+    function initAuthForms() {
+      $('#loginForm').submit(function(e) {
+        e.preventDefault();
+        showLoading(true);
+        // Simulate login request
+        setTimeout(() => {
+          showLoading(false);
+          $('#authModal').modal('hide');
+          showToast('Successfully logged in!');
+        }, 1500);
+      });
+      
+      $('#registerForm').submit(function(e) {
+        e.preventDefault();
+        showLoading(true);
+        // Simulate registration request
+        setTimeout(() => {
+          showLoading(false);
+          $('#authModal').modal('hide');
+          showToast('Account created successfully!');
+        }, 1500);
+      });
+    }
+
+    // Lazy loading
+    function initLazyLoading() {
+      const lazyImages = $('img[data-src]');
+      
+      const lazyLoad = function() {
+        lazyImages.each(function() {
+          if ($(this).offset().top < window.innerHeight + $(window).scrollTop()) {
+            $(this).attr('src', $(this).data('src'));
+            $(this).removeAttr('data-src');
+          }
+        });
+      };
+      
+      lazyLoad();
+      $(window).scroll(lazyLoad);
+    }
+
+    // Loading spinner
+    function showLoading(show) {
+      if (show) {
+        $('.loading-spinner').css('display', 'flex');
+      } else {
+        $('.loading-spinner').hide();
+      }
+    }
+
+    // Toast notification
+    function showToast(message) {
+      const toast = $(`
+        <div class="toast-notification">
+          <div class="toast-content">${message}</div>
+        </div>
+      `);
+      
+      $('body').append(toast);
+      setTimeout(() => toast.addClass('show'), 100);
+      setTimeout(() => {
+        toast.removeClass('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Filter initialization
+    function initFilters() {
+      $('.filter-btn').click(function() {
+        $('.filter-btn').removeClass('active');
+        $(this).addClass('active');
+        const category = $(this).text();
+        category === 'All' ? renderAllMovies() : filterMoviesByCategory(category);
+      });
+      
+      $('.tv-filter-btn').click(function() {
+        $('.tv-filter-btn').removeClass('active');
+        $(this).addClass('active');
+        const genre = $(this).text();
+        genre === 'All' ? renderAllTvShows() : filterTvShowsByGenre(genre);
+      });
+    }
+
+    // Modal initialization
+    function initModals() {
+      $('#watchModal, #episodeModal').on('hidden.bs.modal', function() {
+        const player = $(this).find('video')[0];
+        player.pause();
+        player.currentTime = 0;
+        adCompleted = false; // Reset ad state when modal closes
+      });
+      
+      // Season tabs
+      $(document).on('click', '.season-tab', function() {
+        const seasonNumber = $(this).data('season');
+        const tvShowId = $(this).data('tvshow-id');
+        loadEpisodes(tvShowId, seasonNumber);
+      });
+      
+      // Star rating
+      $(document).on('click', '.stars i', function() {
+        const rating = $(this).data('rating');
+        const stars = $(this).parent().find('i');
+        
+        stars.removeClass('fas').addClass('far');
+        
+        for (let i = 0; i < rating; i++) {
+          $(stars[i]).removeClass('far').addClass('fas');
+        }
+        
+        showToast(`Rated ${rating} stars!`);
+      });
+    }
+
+    // Home page content
+    function loadHomeContent() {
+      renderFeaturedMovies();
+      renderPopularTvShows();
+      renderTrendingContent();
+    }
+    
+    function renderFeaturedMovies() {
+      const featuredGrid = $('#featuredGrid');
+      featuredGrid.empty();
+      
+      movies.filter(movie => movie.featured).forEach(movie => {
+        featuredGrid.append(createMovieCard(movie));
+      });
+    }
+    
+    function renderPopularTvShows() {
+      const popularTvGrid = $('#popularTvGrid');
+      popularTvGrid.empty();
+      
+      tvShows.filter(tv => tv.featured).forEach(tv => {
+        popularTvGrid.append(createTvCard(tv));
+      });
+    }
+    
+    function renderTrendingContent() {
+      const trendingGrid = $('#trendingGrid');
+      trendingGrid.empty();
+      
+      // Combine movies and TV shows with trending flag
+      const trendingContent = [
+        ...movies.filter(movie => movie.trending),
+        ...tvShows.filter(tv => tv.trending)
+      ];
+      
+      // Sort by rating (descending)
+      trendingContent.sort((a, b) => b.rating - a.rating);
+      
+      trendingContent.forEach(item => {
+        if (item.seasons) {
+          // It's a TV show
+          trendingGrid.append(createTvCard(item));
+        } else {
+          // It's a movie
+          trendingGrid.append(createMovieCard(item));
+        }
+      });
+    }
+
+    // Movies section
+    function renderAllMovies() {
+      const movieGrid = $('#movieGrid');
+      movieGrid.empty();
+      movies.forEach(movie => movieGrid.append(createMovieCard(movie)));
+    }
+    
+    function createMovieCard(movie) {
+      return `
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+          <div class="movie-card">
+            <img src="${movie.image}" class="card-img-top" alt="${movie.title}" loading="lazy">
+            <div class="card-body">
+              <h5 class="card-title">${movie.title}</h5>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="rating-badge"><i class="fas fa-star mr-1"></i>${movie.rating}</span>
+                <span class="badge-category">${movie.category}</span>
+              </div>
+              <p class="card-text">${movie.description.substring(0, 100)}...</p>
+              <div class="movie-meta">
+                <span><i class="fas fa-clock"></i> ${movie.duration}</span>
+                <span><i class="fas fa-database"></i> ${movie.size}</span>
+              </div>
+              <button class="btn watch-btn mt-2" data-movie="${movie.title}">
+                <i class="fas fa-play mr-2"></i>Watch Now
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function filterMoviesByCategory(category) {
+      const movieGrid = $('#movieGrid');
+      movieGrid.empty();
+      
+      const filtered = movies.filter(movie => movie.category === category);
+      
+      if (filtered.length === 0) {
+        movieGrid.html(`
+          <div class="col-12 text-center py-5">
+            <i class="fas fa-film fa-3x mb-3" style="color: #ccc;"></i>
+            <h4>No movies found in this category</h4>
+            <p>Try selecting a different category</p>
+          </div>
+        `);
+        return;
+      }
+      
+      filtered.forEach(movie => movieGrid.append(createMovieCard(movie)));
+    }
+
+    // TV Shows section
+    function renderAllTvShows() {
+      const tvGrid = $('#tvGrid');
+      tvGrid.empty();
+      tvShows.forEach(tv => tvGrid.append(createTvCard(tv)));
+    }
+    
+    function createTvCard(tv) {
+      return `
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+          <div class="tv-card">
+            <img src="${tv.image}" class="card-img-top" alt="${tv.title}" loading="lazy">
+            <div class="card-body">
+              <h5 class="card-title">${tv.title}</h5>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="rating-badge tv-rating-badge"><i class="fas fa-star mr-1"></i>${tv.rating}</span>
+                <span class="badge-category">${tv.genre}</span>
+              </div>
+              <p class="card-text">${tv.description.substring(0, 100)}...</p>
+              <div class="tv-meta">
+                <span><i class="fas fa-tv"></i> ${tv.seasons} Seasons</span>
+                <span><i class="fas fa-info-circle"></i> ${tv.status}</span>
+              </div>
+              <button class="btn tv-watch-btn mt-2" data-tv-id="${tv.id}">
+                <i class="fas fa-info-circle mr-2"></i>View Episodes
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function filterTvShowsByGenre(genre) {
+      const tvGrid = $('#tvGrid');
+      tvGrid.empty();
+      
+      const filtered = tvShows.filter(tv => tv.genre === genre);
+      
+      if (filtered.length === 0) {
+        tvGrid.html(`
+          <div class="col-12 text-center py-5">
+            <i class="fas fa-tv fa-3x mb-3" style="color: #ccc;"></i>
+            <h4>No TV shows found in this genre</h4>
+            <p>Try selecting a different genre</p>
+          </div>
+        `);
+        return;
+      }
+      
+      filtered.forEach(tv => tvGrid.append(createTvCard(tv)));
+    }
+
+    // TV Show details modal
+    function openTvDetailsModal(e) {
+      const tvShowId = parseInt($(e.currentTarget).data('tv-id'));
+      const tvShow = tvShows.find(tv => tv.id === tvShowId);
+      
+      if (!tvShow) return;
+      
+      // Set modal content
+      $('#tvShowTitle').text(tvShow.title);
+      $('#tvShowRating').text(tvShow.rating);
+      $('#tvShowGenre').text(tvShow.genre);
+      $('#tvShowDescription').text(tvShow.description);
+      $('#tvShowSeasons').text(tvShow.seasons);
+      $('#tvShowStatus').text(tvShow.status);
+      $('#tvShowPoster').attr('src', tvShow.image);
+      
+      // Set watchlist button
+      $('#addTvToWatchlistBtn').data('tvshow-id', tvShow.id);
+      
+      // Load seasons
+      loadSeasons(tvShow);
+      
+      // Show modal
+      $('#tvDetailsModal').modal('show');
+    }
+    
+    function loadSeasons(tvShow) {
+      const seasonTabs = $('#seasonTabs');
+      seasonTabs.empty();
+      
+      tvShow.seasonsData.forEach(season => {
+        seasonTabs.append(`
+          <li class="nav-item">
+            <a class="nav-link ${season.seasonNumber === 1 ? 'active' : ''} season-tab" 
+               data-tvshow-id="${tvShow.id}" 
+               data-season="${season.seasonNumber}">
+              Season ${season.seasonNumber}
+            </a>
+          </li>
+        `);
+      });
+      
+      // Load episodes for first season
+      if (tvShow.seasonsData.length > 0) {
+        loadEpisodes(tvShow.id, tvShow.seasonsData[0].seasonNumber);
+      }
+    }
+    
+    function loadEpisodes(tvShowId, seasonNumber) {
+      const tvShow = tvShows.find(tv => tv.id === tvShowId);
+      if (!tvShow) return;
+      
+      const season = tvShow.seasonsData.find(s => s.seasonNumber == seasonNumber);
+      if (!season) return;
+      
+      const episodeList = $('#episodeList');
+      episodeList.empty();
+      
+      season.episodes.forEach(episode => {
+        episodeList.append(`
+          <li class="episode-item">
+            <div class="d-flex align-items-center">
+              <span class="episode-number tv-episode-number">${episode.episodeNumber}</span>
+              <span class="episode-title">${episode.title}</span>
+            </div>
+            <button class="btn btn-sm btn-primary episode-btn" 
+                    data-tvshow-id="${tvShow.id}" 
+                    data-season="${seasonNumber}" 
+                    data-episode="${episode.episodeNumber}">
+              <i class="fas fa-play mr-1"></i>Play
+            </button>
+          </li>
+        `);
+      });
+    }
+
+    // Episode modal
+    function openEpisodeModal(tvShowId, seasonNum, episodeNum) {
+      showAdBeforeContent(function() {
+        const tvShow = tvShows.find(tv => tv.id === tvShowId);
+        if (!tvShow) return;
+        
+        const season = tvShow.seasonsData.find(s => s.seasonNumber == seasonNum);
+        if (!season) return;
+        
+        const episode = season.episodes.find(e => e.episodeNumber == episodeNum);
+        if (!episode) return;
+        
+        // Set modal content
+        $('#episodeTitle').text(`${tvShow.title} - S${seasonNum}E${episodeNum}: ${episode.title}`);
+        $('#episodeRating').text(tvShow.rating);
+        $('#episodeDuration').text(episode.duration);
+        $('#episodeShow').text(tvShow.title);
+        $('#episodeDescription').text(episode.description);
+        
+        const player = $('#episodePlayer')[0];
+        player.pause();
+        player.currentTime = 0;
+        player.src = episode.videoUrl;
+        player.load();
+        
+        // Render quality options
+        const qualityOptions = $('#episodeQualityOptions');
+        qualityOptions.empty();
+        
+        episode.qualityOptions.forEach(option => {
+          qualityOptions.append(`
+            <button class="btn btn-outline-primary btn-sm quality-btn" 
+                    data-url="${option.url}">
+              ${option.quality} (${option.size})
+            </button>
+          `);
+        });
+        
+        // Attach quality button handlers
+        $('.quality-btn').click(function() {
+          player.src = $(this).data('url');
+          player.load();
+          player.play();
+        });
+        
+        // Show modal
+        $('#episodeModal').modal('show');
+        
+        // Try autoplay
+        player.play().catch(e => {
+          console.log("Autoplay prevented - user must click play");
+        });
+      });
+    }
+
+    // Movie modal
+    function openWatchModal(e) {
+      showAdBeforeContent(function() {
+        const movieTitle = $(e.currentTarget).data('movie');
+        const movie = movies.find(m => m.title === movieTitle);
+        
+        if (!movie) return;
+        
+        // Set modal content
+        $('#nowPlayingTitle').text(movie.title);
+        $('#movieRating').text(movie.rating);
+        $('#movieDuration').text(movie.duration);
+        $('#movieCategory').text(movie.category);
+        $('#movieDescription').text(movie.description);
+        
+        const player = $('#videoPlayer')[0];
+        player.pause();
+        player.currentTime = 0;
+        player.src = movie.videoUrl;
+        player.load();
+        
+        // Render quality options
+        const qualityOptions = $('#qualityOptions');
+        qualityOptions.empty();
+        
+        movie.qualityOptions.forEach(option => {
+          qualityOptions.append(`
+            <button class="btn btn-outline-primary btn-sm quality-btn" 
+                    data-url="${option.url}">
+              ${option.quality} (${option.size})
+            </button>
+          `);
+        });
+        
+        // Attach quality button handlers
+        $('.quality-btn').click(function() {
+          player.src = $(this).data('url');
+          player.load();
+          player.play();
+        });
+        
+        // Set watchlist button
+        $('#addToWatchlistBtn').data('movie-title', movie.title);
+        
+        // Reset stars
+        $('.stars i').removeClass('fas').addClass('far');
+        
+        // Show modal
+        $('#watchModal').modal('show');
+        
+        // Try autoplay
+        player.play().catch(e => {
+          console.log("Autoplay prevented - user must click play");
+        });
+      });
+    }
+
+    // My List section
+    function loadWatchlist() {
+      // Implementation would go here
+      // Would load from localStorage or backend
+    }
+    
+    // Event handlers
+    $(document).on('click', '.watch-btn', function(e) {
+      e.preventDefault();
+      showAdBeforeContent(function() {
+        openWatchModal(e);
+      });
+    });
+    
+    $(document).on('click', '.tv-watch-btn', function(e) {
+      e.preventDefault();
+      openTvDetailsModal(e);
+    });
+    
+    $(document).on('click', '.episode-btn', function(e) {
+      e.preventDefault();
+      const tvShowId = $(this).data('tvshow-id');
+      const seasonNum = $(this).data('season');
+      const episodeNum = $(this).data('episode');
+      openEpisodeModal(tvShowId, seasonNum, episodeNum);
+    });
+    
+    $(document).on('click', '#addToWatchlistBtn', function() {
+      const movieTitle = $(this).data('movie-title');
+      showToast(`"${movieTitle}" added to your watchlist!`);
+    });
+    
+    $(document).on('click', '#addTvToWatchlistBtn', function() {
+      const tvShowId = $(this).data('tvshow-id');
+      const tvShow = tvShows.find(tv => tv.id === tvShowId);
+      if (tvShow) {
+        showToast(`"${tvShow.title}" added to your watchlist!`);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -586,18 +586,3 @@
                     confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
                     confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
                     document.body.appendChild(confetti);
-                    
-                    // Remove confetti after animation
-                    setTimeout(() => {
-                        confetti.remove();
-                    }, 5000);
-                }
-            }
-            
-            function showLoadingScreen() {
-                loading.style.display = 'flex';
-            }
-        });
-    </script>
-</body>
-</html>

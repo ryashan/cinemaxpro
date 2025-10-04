@@ -3,873 +3,921 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RY Movies - Secure Download</title>
+    <title>Spin to Win - Amazing Rewards!</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff5252;
+            --gold: #ffd700;
+            --light: #ffffff;
+            --dark: #333333;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         body {
-            background: #0f0f0f;
-            color: #fff;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--light);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
             overflow-x: hidden;
-            position: relative;
         }
         
-        /* Animated background effect */
-        body::before {
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            z-index: 10;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #ffeb3b, #ff9800);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: glow 2s infinite alternate, float 6s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 5px rgba(255, 235, 59, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 235, 59, 0.8), 0 0 30px rgba(255, 152, 0, 0.6); }
+        }
+        
+        p {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            margin-bottom: 30px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: min(85vw, 350px);
+            height: min(85vw, 350px);
+            margin: 0 auto 40px;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ff5252 0deg 60deg,
+                #ffeb3b 60deg 120deg,
+                #4caf50 120deg 180deg,
+                #2196f3 180deg 240deg,
+                #9c27b0 240deg 300deg,
+                #ff9800 300deg 360deg
+            );
+            position: relative;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.21, 0.99);
+            box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.8), 0 0 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        .wheel.spinning {
+            animation: wheelGlow 0.5s infinite alternate, pulse 0.8s infinite alternate;
+        }
+        
+        @keyframes wheelGlow {
+            from { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.8), 0 0 30px rgba(0, 0, 0, 0.5); }
+            to { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0.9), 0 0 40px rgba(255, 215, 0, 0.7); }
+        }
+        
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+        
+        .wheel::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .pointer {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 60px;
+            background: var(--accent);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            z-index: 20;
+            filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.3));
+        }
+        
+        .segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: bottom right;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .segment-content {
+            transform: rotate(30deg);
+            width: 80px;
+            margin-left: 20px;
+            font-size: clamp(0.7rem, 2vw, 1rem);
+        }
+        
+        .spin-btn {
+            background: linear-gradient(to right, var(--accent), #ff7979);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .spin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        
+        .spin-btn:hover::before {
+            left: 100%;
+        }
+        
+        .spin-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .spin-btn:active {
+            transform: translateY(2px) scale(0.98);
+        }
+        
+        .spin-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .prizes {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .prize-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px 18px;
+            border-radius: 15px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            transition: var(--transition);
+            flex: 1;
+            min-width: 120px;
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .prize-item:nth-child(1) { animation-delay: 0.1s; }
+        .prize-item:nth-child(2) { animation-delay: 0.2s; }
+        .prize-item:nth-child(3) { animation-delay: 0.3s; }
+        .prize-item:nth-child(4) { animation-delay: 0.4s; }
+        .prize-item:nth-child(5) { animation-delay: 0.5s; }
+        .prize-item:nth-child(6) { animation-delay: 0.6s; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .prize-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .popup-content {
+            background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
+            color: var(--dark);
+            padding: 40px 30px;
+            border-radius: 25px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .popup-content::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #0f0f0f, #1a1a1a, #252525, #1a1a1a, #0f0f0f);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            z-index: -2;
+            height: 8px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
         }
         
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
         
-        .container {
-            text-align: center;
-            max-width: 600px;
-            padding: 2.5rem;
-            background: rgba(20, 20, 20, 0.9);
-            border-radius: 8px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-            position: relative;
-            z-index: 1;
-            border: 1px solid #333;
-            animation: containerFadeIn 1s ease-out;
+        .popup h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
         }
         
-        @keyframes containerFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .popup p {
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
         }
         
-        .ry-logo {
-            font-size: 3.2rem;
-            color: #ff2e42;
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(255, 46, 66, 0.5);
-            animation: logoGlow 2s infinite alternate;
-        }
-        
-        @keyframes logoGlow {
-            from { text-shadow: 0 0 15px rgba(255, 46, 66, 0.5); }
-            to { text-shadow: 0 0 25px rgba(255, 46, 66, 0.8), 0 0 35px rgba(255, 46, 66, 0.6); }
-        }
-        
-        .ry-logo span {
-            color: #00a8ff;
-            animation: logoBlueGlow 2s infinite alternate;
-        }
-        
-        @keyframes logoBlueGlow {
-            from { text-shadow: 0 0 5px rgba(0, 168, 255, 0.3); }
-            to { text-shadow: 0 0 15px rgba(0, 168, 255, 0.6), 0 0 25px rgba(0, 168, 255, 0.4); }
-        }
-        
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 1.2rem;
-            font-weight: 600;
-            background: linear-gradient(to right, #ff2e42, #00a8ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: titleFadeIn 1.2s ease-out;
-        }
-        
-        @keyframes titleFadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            color: #ddd;
-            animation: textFadeIn 1.4s ease-out;
-        }
-        
-        @keyframes textFadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .download-btn {
-            display: inline-block;
-            padding: 16px 45px;
-            background: linear-gradient(to right, #ff2e42, #c5001a);
+        .popup-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
             border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
             cursor: pointer;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 12px rgba(255, 46, 66, 0.4);
-            animation: pulse 2s infinite, btnFadeIn 1.6s ease-out;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+        
+        .popup-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.6);
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: var(--accent);
+            top: 0;
+            opacity: 0;
+            z-index: 1000;
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+        
+        .floating-icons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.1;
+            animation: floatAround 15s infinite linear;
+        }
+        
+        @keyframes floatAround {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(30px, 50px) rotate(120deg);
+            }
+            66% {
+                transform: translate(-20px, 80px) rotate(240deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+        
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .loader {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading p {
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        /* Particle Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: floatParticle 15s infinite linear;
+        }
+        
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+            }
+        }
+        
+        /* Sparkle Effects */
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 100;
+        }
+        
+        @keyframes sparkle {
+            0% {
+                opacity: 1;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg);
+            }
+        }
+        
+        /* Firework Effect */
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px;
+            animation: firework 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes firework {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0);
+                width: 5px;
+                height: 5px;
+            }
+            50% {
+                opacity: 1;
+                width: 5px;
+                height: 5px;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty));
+                width: var(--size);
+                height: var(--size);
+            }
+        }
+        
+        /* Bounce Animation */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        /* Shine Effect */
+        .shine {
             position: relative;
             overflow: hidden;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 4px 12px rgba(255, 46, 66, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 46, 66, 0.6); }
-            100% { transform: scale(1); box-shadow: 0 4px 12px rgba(255, 46, 66, 0.4); }
-        }
-        
-        @keyframes btnFadeIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.9); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        
-        .download-btn::before {
+        .shine::after {
             content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
-            transform: rotate(45deg);
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
             animation: shine 3s infinite;
         }
         
         @keyframes shine {
-            0% { left: -50%; }
-            100% { left: 150%; }
+            0% { transform: translateX(-100%) translateY(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(30deg); }
         }
         
-        .download-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(255, 46, 66, 0.6);
-            animation: none;
+        /* Glow Border Animation */
+        .glow-border {
+            position: relative;
         }
         
-        .download-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .download-btn i {
-            margin-right: 12px;
-        }
-        
-        .counter {
-            margin-top: 25px;
-            font-size: 1rem;
-            color: #aaa;
-            animation: textFadeIn 1.8s ease-out;
-        }
-        
-        .warning {
-            margin-top: 30px;
-            padding: 12px;
-            background: rgba(255, 46, 66, 0.15);
-            border-radius: 4px;
-            font-size: 0.9rem;
-            border-left: 3px solid #ff2e42;
-            color: #ddd;
-            animation: shake 0.5s ease-in-out 2s 1, fadeIn 2s ease-out;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .footer {
-            margin-top: 30px;
-            color: #777;
-            font-size: 0.8rem;
-            animation: textFadeIn 2s ease-out;
-        }
-        
-        /* RY Movies loader animation */
-        .ry-loader {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-            height: 5px;
-            animation: fadeIn 1.5s ease-out;
-        }
-        
-        .ry-loader .line {
-            width: 2px;
-            height: 20px;
-            background: linear-gradient(to top, #ff2e42, #00a8ff);
-            margin: 0 3px;
-            animation: ry-loader 1s infinite;
-        }
-        
-        .ry-loader .line:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-        
-        .ry-loader .line:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-        
-        .ry-loader .line:nth-child(4) {
-            animation-delay: 0.3s;
-        }
-        
-        .ry-loader .line:nth-child(5) {
-            animation-delay: 0.4s;
-        }
-        
-        @keyframes ry-loader {
-            0% { height: 5px; }
-            50% { height: 20px; }
-            100% { height: 5px; }
-        }
-        
-        /* Floating elements animation */
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(5deg); }
-            100% { transform: translateY(0) rotate(0deg); }
-        }
-        
-        .floating {
+        .glow-border::before {
+            content: '';
             position: absolute;
-            opacity: 0.1;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            background-size: 400%;
+            border-radius: 25px;
             z-index: -1;
-            animation: float 8s infinite ease-in-out;
+            animation: glowing 20s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         
-        .floating.clapperboard {
-            top: 10%;
-            left: 15%;
-            font-size: 3rem;
-            color: #ff2e42;
-            animation-delay: 0s;
+        .glow-border:hover::before {
+            opacity: 1;
         }
         
-        .floating.film {
-            bottom: 20%;
-            right: 15%;
-            font-size: 2.5rem;
-            color: #00a8ff;
-            animation-delay: 1s;
+        @keyframes glowing {
+            0% { background-position: 0 0; }
+            50% { background-position: 400% 0; }
+            100% { background-position: 0 0; }
         }
         
-        .floating.ticket {
-            top: 30%;
-            right: 20%;
-            font-size: 2rem;
-            color: #ff2e42;
-            animation-delay: 2s;
+        /* Neon Text Effect */
+        .neon-text {
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #ff5252,
+                0 0 40px #ff5252,
+                0 0 80px #ff5252;
+            animation: neon-flicker 2s infinite alternate;
         }
         
-        .floating.popcorn {
-            bottom: 15%;
-            left: 20%;
-            font-size: 2.2rem;
-            color: #00a8ff;
-            animation-delay: 3s;
+        @keyframes neon-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #ff5252,
+                    0 0 40px #ff5252,
+                    0 0 80px #ff5252;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
         }
         
-        .features {
-            display: flex;
-            justify-content: space-around;
-            margin: 25px 0;
-            animation: featuresFadeIn 1.7s ease-out;
-        }
-        
-        @keyframes featuresFadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .feature {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.3s ease;
-        }
-        
-        .feature:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature i {
-            font-size: 1.8rem;
-            color: #00a8ff;
-            margin-bottom: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .feature:hover i {
-            color: #ff2e42;
-            transform: scale(1.2);
-        }
-        
-        .feature span {
-            font-size: 0.9rem;
-            color: #aaa;
-            transition: color 0.3s ease;
-        }
-        
-        .feature:hover span {
-            color: #fff;
-        }
-        
-        /* Particle animation */
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .particle {
-            position: absolute;
-            background: rgba(255, 46, 66, 0.3);
-            border-radius: 50%;
-            animation: particleFloat 15s infinite linear;
-        }
-        
-        @keyframes particleFloat {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-        
-        .progress-container {
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background: linear-gradient(to right, #ff2e42, #00a8ff);
-            border-radius: 20px;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-        
-        .ad-counter {
-            margin: 15px 0;
-            font-size: 1rem;
-            color: #00a8ff;
-            font-weight: bold;
-        }
-        
-        .security-badge {
-            display: inline-flex;
-            align-items: center;
-            margin-top: 15px;
-            padding: 8px 15px;
-            background: rgba(0, 168, 255, 0.1);
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: #00a8ff;
-        }
-        
-        .security-badge i {
-            margin-right: 8px;
-        }
-        
-        .cheat-warning {
-            display: none;
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 46, 66, 0.2);
-            border: 1px solid #ff2e42;
-            border-radius: 5px;
-            color: #ff6b6b;
-            animation: shake 0.5s ease-in-out;
-        }
-        
-        .return-message {
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(0, 168, 255, 0.1);
-            border-radius: 5px;
-            color: #00a8ff;
-            display: none;
-        }
-        
-        .download-ready {
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(0, 255, 0, 0.1);
-            border-radius: 5px;
-            color: #00ff00;
-            display: none;
+        /* Media Queries */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .wheel-container {
+                width: min(80vw, 300px);
+                height: min(80vw, 300px);
+            }
+            
+            .segment-content {
+                width: 60px;
+                margin-left: 15px;
+            }
+            
+            .prizes {
+                gap: 8px;
+            }
+            
+            .prize-item {
+                min-width: 100px;
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .spin-btn {
+                padding: 16px 40px;
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Particle Background -->
     <div class="particles" id="particles"></div>
     
-    <div class="floating clapperboard"><i class="fas fa-film"></i></div>
-    <div class="floating film"><i class="fas fa-video"></i></div>
-    <div class="floating ticket"><i class="fas fa-ticket-alt"></i></div>
-    <div class="floating popcorn"><i class="fas fa-popcorn"></i></div>
+    <!-- Floating Icons -->
+    <div class="floating-icons">
+        <div class="floating-icon" style="top:10%; left:5%; animation-delay: 0s;"><i class="fas fa-gift"></i></div>
+        <div class="floating-icon" style="top:20%; left:80%; animation-delay: 2s;"><i class="fas fa-star"></i></div>
+        <div class="floating-icon" style="top:60%; left:10%; animation-delay: 4s;"><i class="fas fa-trophy"></i></div>
+        <div class="floating-icon" style="top:70%; left:85%; animation-delay: 6s;"><i class="fas fa-heart"></i></div>
+        <div class="floating-icon" style="top:40%; left:90%; animation-delay: 8s;"><i class="fas fa-gem"></i></div>
+        <div class="floating-icon" style="top:30%; left:15%; animation-delay: 10s;"><i class="fas fa-crown"></i></div>
+    </div>
     
+    <!-- Main Content -->
     <div class="container">
-        <div class="ry-logo">RY <span>Movies</span></div>
-        <h1>Secure Download Portal</h1>
-        <p>Click the button below to access your premium content. Your download will begin after watching ads.</p>
+        <h1 class="neon-text"><i class="fas fa-dice bounce"></i> Spin to Win!</h1>
+        <p>Try your luck on our magical prize wheel! You could win amazing discounts, gift cards, or other exciting rewards!</p>
         
-        <div class="ad-counter" id="adCounter">
-            Please watch an ad to continue (0/3)
-        </div>
-        
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        
-        <div class="return-message" id="returnMessage">
-            <i class="fas fa-check-circle"></i> Welcome back! Your ad view has been verified.
-        </div>
-        
-        <div class="download-ready" id="downloadReady">
-            <i class="fas fa-check-circle"></i> You can now download the file!
-        </div>
-        
-        <div class="cheat-warning" id="cheatWarning">
-            <i class="fas fa-exclamation-triangle"></i> 
-            <span id="warningMessage">Suspicious activity detected. Please complete the ad views properly.</span>
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <i class="fas fa-download"></i>
-                <span>Fast Downloads</span>
-            </div>
-            <div class="feature">
-                <i class="fas fa-shield-alt"></i>
-                <span>Secure Content</span>
-            </div>
-            <div class="feature">
-                <i class="fas fa-high-definition"></i>
-                <span>HD Quality</span>
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <div class="wheel" id="wheel">
+                <div class="segment" style="transform: rotate(0deg);">
+                    <div class="segment-content">10% OFF</div>
+                </div>
+                <div class="segment" style="transform: rotate(60deg);">
+                    <div class="segment-content">$5 Gift Card</div>
+                </div>
+                <div class="segment" style="transform: rotate(120deg);">
+                    <div class="segment-content">Free Shipping</div>
+                </div>
+                <div class="segment" style="transform: rotate(180deg);">
+                    <div class="segment-content">25% OFF</div>
+                </div>
+                <div class="segment" style="transform: rotate(240deg);">
+                    <div class="segment-content">$10 Gift Card</div>
+                </div>
+                <div class="segment" style="transform: rotate(300deg);">
+                    <div class="segment-content">Try Again</div>
+                </div>
             </div>
         </div>
         
-        <a href="#" class="download-btn" id="downloadBtn">
-            <i class="fas fa-download"></i> Watch Ad to Download
-        </a>
+        <button class="spin-btn glow-border" id="spin-btn">
+            <i class="fas fa-sync-alt"></i> SPIN TO WIN!
+        </button>
         
-        <div class="security-badge">
-            <i class="fas fa-shield-check"></i> Protected by Advanced Anti-Cheat System
-        </div>
-        
-        <div class="ry-loader">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-        </div>
-        
-        <div class="counter">
-            <i class="fas fa-bolt"></i> Download available after ads
-        </div>
-        
-        <div class="warning">
-            <i class="fas fa-exclamation-circle"></i> For personal use only. Please respect copyright laws.
-        </div>
-        
-        <div class="footer">
-            © 2023 RY Movies. Your premium content destination.
+        <div class="prizes">
+            <div class="prize-item"><i class="fas fa-tag"></i> 10% OFF</div>
+            <div class="prize-item"><i class="fas fa-credit-card"></i> $5 Gift Card</div>
+            <div class="prize-item"><i class="fas fa-shipping-fast"></i> Free Shipping</div>
+            <div class="prize-item"><i class="fas fa-percentage"></i> 25% OFF</div>
+            <div class="prize-item"><i class="fas fa-money-bill-wave"></i> $10 Gift Card</div>
+            <div class="prize-item"><i class="fas fa-redo"></i> Try Again</div>
         </div>
     </div>
-
+    
+    <!-- Popup -->
+    <div class="popup" id="popup">
+        <div class="popup-content shine">
+            <h2>Congratulations! <i class="fas fa-trophy"></i></h2>
+            <p>You've won: <span id="prize-name" style="font-weight: bold; color: var(--primary);">10% OFF</span></p>
+            <p>Click the button below to claim your amazing prize!</p>
+            <button class="popup-btn" id="claim-btn">
+                <i class="fas fa-gift"></i> CLAIM YOUR PRIZE
+            </button>
+        </div>
+    </div>
+    
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loader"></div>
+        <p>Redirecting to our partner...</p>
+    </div>
+    
     <script>
-        // Enhanced Anti-Cheat System with Fixed Progress Bar
-        class AntiCheatSystem {
-            constructor() {
-                this.adClicks = localStorage.getItem('adClicks') ? parseInt(localStorage.getItem('adClicks')) : 0;
-                this.maxAdClicks = 3;
-                this.adLink = 'https://www.revenuecpmgate.com/fy8870cvf?key=a2204eba5bc0f973e5babd23079f3978';
-                this.downloadLink = 'https://www.mediafire.com/file/93ut7kupd3qjaqe/F1-The-Movie_720p.mp4/file';
-                this.lastClickTime = 0;
-                this.clickPattern = [];
-                this.cheatAttempts = 0;
-                this.userBehavior = [];
-                
-                this.init();
-            }
-            
-            init() {
-                this.updateUI();
-                this.setupEventListeners();
-                this.startActivityMonitoring();
-                this.checkReturnFromAd();
-            }
-            
-            setupEventListeners() {
-                const downloadBtn = document.getElementById('downloadBtn');
-                downloadBtn.addEventListener('click', (e) => this.handleDownloadClick(e));
-                
-                // Monitor window focus/blur (tab switching)
-                window.addEventListener('blur', () => this.handleWindowBlur());
-                window.addEventListener('focus', () => this.handleWindowFocus());
-                
-                // Monitor mouse movements
-                document.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-                
-                // Monitor keyboard events
-                document.addEventListener('keydown', (e) => this.handleKeyPress(e));
-                
-                // Monitor page visibility
-                document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
-            }
-            
-            startActivityMonitoring() {
-                // Periodic check for suspicious activity
-                setInterval(() => this.monitorActivity(), 5000);
-            }
-            
-            // Check if user is returning from an ad
-            checkReturnFromAd() {
-                const returnTime = parseInt(sessionStorage.getItem('adReturnTime') || 0);
-                const currentTime = new Date().getTime();
-                
-                // If user returned within a reasonable time frame (5-120 seconds)
-                if (returnTime > 0 && currentTime - returnTime < 120000 && currentTime - returnTime > 5000) {
-                    if (this.validateAdView()) {
-                        document.getElementById('returnMessage').style.display = 'block';
-                        setTimeout(() => {
-                            document.getElementById('returnMessage').style.display = 'none';
-                        }, 5000);
-                        
-                        // Show download ready message if all ads completed
-                        if (this.adClicks >= this.maxAdClicks) {
-                            document.getElementById('downloadReady').style.display = 'block';
-                            setTimeout(() => {
-                                document.getElementById('downloadReady').style.display = 'none';
-                            }, 5000);
-                        }
-                    }
-                }
-                
-                // Clear the return time
-                sessionStorage.removeItem('adReturnTime');
-            }
-            
-            handleDownloadClick(e) {
-                e.preventDefault();
-                
-                // Check for rapid clicking
-                const currentTime = new Date().getTime();
-                if (currentTime - this.lastClickTime < 1000) {
-                    this.cheatAttempts++;
-                    this.showWarning("Please don't click too rapidly.");
-                    return;
-                }
-                this.lastClickTime = currentTime;
-                
-                // Record click pattern for analysis
-                this.clickPattern.push(currentTime);
-                if (this.clickPattern.length > 5) this.clickPattern.shift();
-                
-                if (this.adClicks >= this.maxAdClicks) {
-                    // Redirect to download
-                    this.redirectToDownload();
-                } else {
-                    // Redirect to ad
-                    this.redirectToAd();
-                }
-            }
-            
-            redirectToAd() {
-                const downloadBtn = document.getElementById('downloadBtn');
-                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting to ad...';
-                
-                // Set verification data
-                const verifyToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
-                sessionStorage.setItem('adVerifyToken', verifyToken);
-                sessionStorage.setItem('adRedirectTime', new Date().getTime());
-                localStorage.setItem('adRedirectTime', new Date().getTime());
-                
-                // Store user behavior for verification upon return
-                sessionStorage.setItem('userBehavior', JSON.stringify(this.userBehavior));
-                
-                setTimeout(() => {
-                    // Open ad in same tab
-                    window.location.href = this.adLink;
-                }, 1500);
-            }
-            
-            redirectToDownload() {
-                const downloadBtn = document.getElementById('downloadBtn');
-                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing your download...';
-                
-                // Verify the user completed the ad views properly
-                if (!this.verifyAdCompletion()) {
-                    this.showWarning("Please complete all ad views properly before downloading.");
-                    this.updateUI();
-                    return;
-                }
-                
-                // Show loading animation
-                document.querySelector('.ry-loader').style.display = 'flex';
-                
-                setTimeout(() => {
-                    // Reset counter after successful download
-                    localStorage.setItem('adClicks', 0);
-                    window.location.href = this.downloadLink;
-                }, 1500);
-            }
-            
-            verifyAdCompletion() {
-                // For the final download, we just need to check if the ad clicks count is correct
-                return this.adClicks >= this.maxAdClicks;
-            }
-            
-            validateAdView() {
-                const redirectTime = parseInt(sessionStorage.getItem('adRedirectTime') || 0);
-                const currentTime = new Date().getTime();
-                const timeSpent = currentTime - redirectTime;
-                
-                // Minimum 5 seconds, maximum 5 minutes to count as valid
-                if (timeSpent < 5000 || timeSpent > 300000) {
-                    return false;
-                }
-                
-                // Check if verification token exists
-                if (!sessionStorage.getItem('adVerifyToken')) {
-                    return false;
-                }
-                
-                // Valid ad view - increment count
-                this.adClicks++;
-                localStorage.setItem('adClicks', this.adClicks);
-                sessionStorage.removeItem('adVerifyToken');
-                sessionStorage.removeItem('adRedirectTime');
-                
-                this.updateUI();
-                return true;
-            }
-            
-            handleWindowBlur() {
-                // User switched tabs/windows - could be legitimate but we note it
-                const blurTime = new Date().getTime();
-                localStorage.setItem('windowBlurTime', blurTime);
-                
-                // If we just redirected to an ad, set the return time
-                if (sessionStorage.getItem('adVerifyToken')) {
-                    sessionStorage.setItem('adReturnTime', blurTime);
-                }
-            }
-            
-            handleWindowFocus() {
-                // User returned to tab - check if they were away for a reasonable time
-                const blurTime = parseInt(localStorage.getItem('windowBlurTime') || 0);
-                const focusTime = new Date().getTime();
-                
-                if (focusTime - blurTime > 5000 && sessionStorage.getItem('adVerifyToken')) {
-                    // User was away for more than 5 seconds and has a verify token
-                    // This might indicate a genuine ad view
-                    if (this.validateAdView()) {
-                        document.getElementById('returnMessage').style.display = 'block';
-                        setTimeout(() => {
-                            document.getElementById('returnMessage').style.display = 'none';
-                        }, 5000);
-                    }
-                }
-            }
-            
-            handleMouseMove(e) {
-                // Record user behavior for analysis
-                this.userBehavior.push({
-                    type: 'mousemove',
-                    x: e.clientX,
-                    y: e.clientY,
-                    time: Date.now()
-                });
-                
-                // Keep only the last 100 interactions
-                if (this.userBehavior.length > 100) {
-                    this.userBehavior.shift();
-                }
-                
-                localStorage.setItem('lastMouseMove', Date.now());
-            }
-            
-            handleKeyPress(e) {
-                // Record user behavior
-                this.userBehavior.push({
-                    type: 'keypress',
-                    key: e.key,
-                    code: e.code,
-                    time: Date.now()
-                });
-                
-                // Keep only the last 100 interactions
-                if (this.userBehavior.length > 100) {
-                    this.userBehavior.shift();
-                }
-                
-                // Detect developer tools shortcuts
-                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) { // Ctrl+Shift+I
-                    this.cheatAttempts += 2;
-                    this.showWarning("Developer tools are not allowed on this page.");
-                }
-                
-                if (e.keyCode === 123) { // F12
-                    this.cheatAttempts += 2;
-                    this.showWarning("Developer tools are not allowed on this page.");
-                }
-            }
-            
-            handleVisibilityChange() {
-                if (document.hidden) {
-                    // Page is hidden (user switched tabs)
-                    this.handleWindowBlur();
-                } else {
-                    // Page is visible again
-                    this.handleWindowFocus();
-                }
-            }
-            
-            monitorActivity() {
-                // Check for multiple cheat attempts
-                if (this.cheatAttempts >= 3) {
-                    this.penalizeUser();
-                }
-                
-                // Check if user is inactive (might be using automated tools)
-                const lastMouseMove = parseInt(localStorage.getItem('lastMouseMove') || 0);
-                const currentTime = new Date().getTime();
-                
-                if (currentTime - lastMouseMove > 10000 && lastMouseMove > 0) {
-                    // No mouse movement for 10 seconds - suspicious
-                    this.cheatAttempts++;
-                }
-            }
-            
-            penalizeUser() {
-                // Reset progress for cheating users
-                this.adClicks = 0;
-                localStorage.setItem('adClicks', 0);
-                this.showWarning("Multiple violations detected. Your progress has been reset.");
-                this.cheatAttempts = 0;
-                
-                // Disable button temporarily
-                const downloadBtn = document.getElementById('downloadBtn');
-                downloadBtn.style.opacity = '0.5';
-                downloadBtn.style.pointerEvents = 'none';
-                downloadBtn.innerHTML = '<i class="fas fa-ban"></i> Temporarily disabled';
-                
-                setTimeout(() => {
-                    downloadBtn.style.opacity = '1';
-                    downloadBtn.style.pointerEvents = 'auto';
-                    this.updateUI();
-                    document.getElementById('cheatWarning').style.display = 'none';
-                }, 10000);
-            }
-            
-            showWarning(message) {
-                const warning = document.getElementById('cheatWarning');
-                const messageEl = document.getElementById('warningMessage');
-                messageEl.textContent = message;
-                warning.style.display = 'block';
-                
-                // Auto-hide warning after 5 seconds
-                setTimeout(() => {
-                    warning.style.display = 'none';
-                }, 5000);
-            }
-            
-            updateUI() {
-                const adCounter = document.getElementById('adCounter');
-                const progressBar = document.getElementById('progressBar');
-                const downloadBtn = document.getElementById('downloadBtn');
-                
-                adCounter.textContent = `Please watch an ad to continue (${this.adClicks}/${this.maxAdClicks})`;
-                
-                // Calculate progress percentage
-                const progressPercentage = (this.adClicks / this.maxAdClicks) * 100;
-                progressBar.style.width = `${progressPercentage}%`;
-                
-                if (this.adClicks >= this.maxAdClicks) {
-                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Now';
-                    adCounter.innerHTML = '<i class="fas fa-check-circle"></i> Ads completed! You can now download';
-                    adCounter.style.color = '#00ff00';
-                } else {
-                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Watch Ad to Download';
-                }
-            }
-        }
-
-        // Initialize the anti-cheat system
-        const antiCheat = new AntiCheatSystem();
-        
-        // Create animated particles
         document.addEventListener('DOMContentLoaded', function() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
+            // Create particle background
+            createParticles();
             
-            for (let i = 0; i < particleCount; i++) {
-                createParticle(particlesContainer);
+            // Check if user has visited before
+            if (!localStorage.getItem('hasVisited')) {
+                // First visit - redirect to ad
+                localStorage.setItem('hasVisited', 'true');
+                showLoadingScreen();
+                setTimeout(() => {
+                    window.location.href = 'https://www.revenuecpmgate.com/fy8870cvf?key=a2204eba5bc0f973e5babd23079f3978';
+                }, 2000);
             }
             
-            function createParticle(container) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
+            const wheel = document.getElementById('wheel');
+            const spinBtn = document.getElementById('spin-btn');
+            const popup = document.getElementById('popup');
+            const prizeName = document.getElementById('prize-name');
+            const claimBtn = document.getElementById('claim-btn');
+            const loading = document.getElementById('loading');
+            
+            // Prizes corresponding to wheel segments (in order)
+            const prizes = [
+                "10% OFF",
+                "$5 Gift Card",
+                "Free Shipping",
+                "25% OFF",
+                "$10 Gift Card",
+                "Try Again"
+            ];
+            
+            let isSpinning = false;
+            
+            spinBtn.addEventListener('click', function() {
+                if (isSpinning) return;
                 
-                const size = Math.random() * 5 + 2;
-                const posX = Math.random() * 100;
-                const duration = Math.random() * 10 + 10;
-                const delay = Math.random() * 5;
-                const colorValue = Math.random() > 0.5 ? 255 : 0;
+                isSpinning = true;
+                spinBtn.disabled = true;
+                wheel.classList.add('spinning');
                 
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${posX}vw`;
-                particle.style.animationDuration = `${duration}s`;
-                particle.style.animationDelay = `${delay}s`;
+                // Create sparkle effects
+                createSparkles();
                 
-                if (colorValue === 255) {
-                    particle.style.background = `rgba(255, 46, 66, ${Math.random() * 0.4 + 0.1})`;
-                } else {
-                    particle.style.background = `rgba(0, 168, 255, ${Math.random() * 0.4 + 0.1})`;
+                // Random rotation between 3 and 8 full rotations plus a segment
+                const segmentAngle = 60; // 360/6 segments
+                const extraRotation = Math.floor(Math.random() * 6) * segmentAngle;
+                const fullRotations = 5 + Math.floor(Math.random() * 3); // 5-7 full rotations
+                const totalRotation = 360 * fullRotations + extraRotation;
+                
+                wheel.style.transform = `rotate(${totalRotation}deg)`;
+                
+                // Create confetti effect
+                createConfetti();
+                
+                // Determine prize based on final rotation
+                setTimeout(function() {
+                    const normalizedRotation = totalRotation % 360;
+                    const prizeIndex = Math.floor((360 - normalizedRotation) / segmentAngle) % 6;
+                    
+                    // Create firework effect
+                    createFireworks();
+                    
+                    // Show popup with prize
+                    prizeName.textContent = prizes[prizeIndex];
+                    popup.style.display = 'flex';
+                    wheel.classList.remove('spinning');
+                    
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+                }, 4000);
+            });
+            
+            claimBtn.addEventListener('click', function() {
+                // Show loading screen and redirect to ad after claiming prize
+                showLoadingScreen();
+                setTimeout(() => {
+                    window.location.href = 'https://www.revenuecpmgate.com/fy8870cvf?key=a2204eba5bc0f973e5babd23079f3978';
+                }, 2000);
+            });
+            
+            function createParticles() {
+                const particlesContainer = document.getElementById('particles');
+                const particleCount = 50;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    
+                    // Random size, position, and animation delay
+                    const size = Math.random() * 10 + 5;
+                    const posX = Math.random() * 100;
+                    const posY = Math.random() * 100;
+                    const delay = Math.random() * 15;
+                    const duration = Math.random() * 10 + 15;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${posX}%`;
+                    particle.style.top = `${posY}%`;
+                    particle.style.animationDelay = `${delay}s`;
+                    particle.style.animationDuration = `${duration}s`;
+                    
+                    particlesContainer.appendChild(particle);
                 }
+            }
+            
+            function createSparkles() {
+                const sparkleCount = 20;
                 
-                container.appendChild(particle);
+                for (let i = 0; i < sparkleCount; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    
+                    // Random position around the wheel
+                    const wheelRect = wheel.getBoundingClientRect();
+                    const centerX = wheelRect.left + wheelRect.width / 2;
+                    const centerY = wheelRect.top + wheelRect.height / 2;
+                    const radius = wheelRect.width / 2 + 20;
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * radius;
+                    
+                    const posX = centerX + Math.cos(angle) * distance;
+                    const posY = centerY + Math.sin(angle) * distance;
+                    
+                    sparkle.style.left = `${posX}px`;
+                    sparkle.style.top = `${posY}px`;
+                    sparkle.style.animation = `sparkle ${Math.random() * 0.5 + 0.5}s ease-out forwards`;
+                    sparkle.style.animationDelay = `${Math.random() * 0.5}s`;
+                    
+                    document.body.appendChild(sparkle);
+                    
+                    // Remove sparkle after animation
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 1000);
+                }
+            }
+            
+            function createConfetti() {
+                const colors = ['#ff5252', '#ffeb3b', '#4caf50', '#2196f3', '#9c27b0', '#ff9800'];
+                const confettiCount = 100;
+                
+                for (let i = 0; i < confettiCount; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
+                    document.body.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }
+            }
+            
+            function createFireworks() {
+                const fireworkCount = 5;
+                
+                for (let i = 0; i < fireworkCount; i++) {
+                    setTimeout(() => {
+                        const fireworkContainer = document.createElement('div');
+                        fireworkContainer.style.position = 'fixed';
+                        fireworkContainer.style.top = '50%';
+                        fireworkContainer.style.left = '50%';
+                        fireworkContainer.style.transform = 'translate(-50%, -50%)';
+                        fireworkContainer.style.zIndex = '100';
+                        
+                        const particleCount = 30;
+                        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                        
+                        for (let j = 0; j < particleCount; j++) {
+                            const firework = document.createElement('div');
+                            firework.className = 'firework';
+                            
+                            const angle = Math.random() * Math.PI * 2;
+                            const distance = Math.random() * 100 + 50;
+                            const tx = Math.cos(angle) * distance;
+                            const ty = Math.sin(angle) * distance;
+                            const size = Math.random() * 20 + 5;
+                            const color = colors[Math.floor(Math.random() * colors.length)];
+                            
+                            firework.style.setProperty('--tx', `${tx}px`);
+                            firework.style.setProperty('--ty', `${ty}px`);
+                            firework.style.setProperty('--size', `${size}px`);
+                            firework.style.background = color;
+                            firework.style.boxShadow = `0 0 10px 2px ${color}`;
+                            
+                            fireworkContainer.appendChild(firework);
+                        }
+                        
+                        document.body.appendChild(fireworkContainer);
+                        
+                        // Remove fireworks after animation
+                        setTimeout(() => {
+                            fireworkContainer.remove();
+                        }, 1000);
+                    }, i * 300);
+                }
+            }
+            
+            function showLoadingScreen() {
+                loading.style.display = 'flex';
             }
         });
     </script>
